@@ -25,9 +25,9 @@ public class ImageController {
     private UserService userService;
 
     @GetMapping("/getImage")
-    public R<List<Image>> getImage(@RequestParam Long id) {
+    public R<List<Image>> getImage(@RequestParam Long userId) {
         LambdaQueryWrapper<Image> imageLambdaQueryWrapper = new LambdaQueryWrapper<>();
-        LambdaQueryWrapper<Image> images = imageLambdaQueryWrapper.eq(Image::getUserId, id);
+        LambdaQueryWrapper<Image> images = imageLambdaQueryWrapper.eq(Image::getUserId, userId);
         List<Image> img = imageService.list(images);
         return R.success(img);
     }
