@@ -12,9 +12,9 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @ServletComponentScan
 @EnableTransactionManagement
 @EnableCaching //开起 Spring Cache 注解方式的缓存功能
-public class ReggieApplication {
+public class BoWallApplication {
     public static void main(String[] args) {
-        SpringApplication.run(ReggieApplication.class,args);
+        SpringApplication.run(BoWallApplication.class,args);
         log.info("项目启动成功...");
     }
 }
