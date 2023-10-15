@@ -19,10 +19,10 @@ public class PostsController {
     private PostsService postsService;
 
     @GetMapping("/count")
-    public R<String> count(@RequestParam Long userId) {
+    public R<String> count(@RequestParam String account) {
         LambdaQueryWrapper<Posts> postsLambdaQueryWrapper = new LambdaQueryWrapper<>();
-        postsLambdaQueryWrapper.in(Posts::getUserId, userId);
-        int count = postsService.count(postsLambdaQueryWrapper);
+        postsLambdaQueryWrapper.in(Posts::getAccount, account);
+        int count = (int)postsService.count(postsLambdaQueryWrapper);
         if (count > 0) {
             return R.success(String.valueOf(count));
         }else {

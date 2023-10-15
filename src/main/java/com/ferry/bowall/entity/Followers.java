@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class Followers {
-    private Long userId;
-    private Long FollowersId;
+    private String account;
+    private String FollowersAccount;
 }

@@ -1,6 +1,7 @@
 package com.ferry.bowall.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.ferry.bowall.common.R;
 import com.ferry.bowall.entity.User;
 import com.ferry.bowall.service.UserService;
@@ -8,7 +9,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 
 @RequestMapping("/user")
@@ -52,12 +56,27 @@ public class UserController {
                 user.setStatus(1);
                 userService.save(user);
             }
-            session.setAttribute("user",user.getId());
+            session.setAttribute("user",user.getAccount());
 
 //            //如果用户登录成功，删除 Redis 中缓存的验证码
 //            redisTemplate.delete(phone);
             return R.success(user);
         }
         return R.error("登录失败");
+    }
+
+
+    @PutMapping
+    public R<String> update(HttpServletRequest request, @RequestBody User user) {
+        user.setUpdateTime(LocalDateTime.now());
+        userService.updateUser(user);
+        return R.success("用户信息修改成功");
+    }
+
+
+    @GetMapping("/friends")
+    public R<List<User>> friends(@RequestParam String account) {
+        List<User> friends = userService.friends(account);
+        return R.success(friends);
     }
 }

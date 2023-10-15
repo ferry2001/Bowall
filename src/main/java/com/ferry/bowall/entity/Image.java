@@ -7,6 +7,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 @Data
 @Qualifier
 public class Image {
-    private Long userId;
+    private String account;
     private String url;
 }

@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 @Data
 public class Posts {
     private Long id;
-    private Long userId;
+    private String account;
     private String text;
     private LocalDateTime updateDate;
 }

@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class Fans {
-    private Long userId;
-    private Long fansId;
+    private String account;
+    private String fansAccount;
 }

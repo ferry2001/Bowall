@@ -18,10 +18,10 @@ public class FollowersController {
     private FollowersService followersService;
 
     @GetMapping("/count")
-    public R<String> count(@RequestParam Long userId) {
+    public R<String> count(@RequestParam String account) {
         LambdaQueryWrapper<Followers> followersLambdaQueryWrapper = new LambdaQueryWrapper<>();
-        followersLambdaQueryWrapper.in(Followers::getUserId, userId);
-        int count = followersService.count(followersLambdaQueryWrapper);
+        followersLambdaQueryWrapper.in(Followers::getAccount, account);
+        int count = (int)followersService.count(followersLambdaQueryWrapper);
         if (count > 0) {
             return R.success(String.valueOf(count));
         }else {

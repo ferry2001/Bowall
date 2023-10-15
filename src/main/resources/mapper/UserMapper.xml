@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ferry.bowall.mapper.UserMapper" >
+    <select id="getUserList" resultType="com.ferry.bowall.entity.User">
+        SELECT * FROM user
+    </select>
+
+    <update id="updateUser">
+        update bowall.user set name = #{name}, phone = #{phone},avatar = #{avatar},
+                               sign = #{sign},update_time = #{updateTime} where account = #{account}
+    </update>
+
+    <select id="friends" resultType="com.ferry.bowall.entity.User">
+        SELECT * FROM user where account in (SELECT followers_account FROM followers where account = #{account})
+                             and account in (SELECT account FROM followers where followers_account = #{account})
+    </select>
+</mapper>
