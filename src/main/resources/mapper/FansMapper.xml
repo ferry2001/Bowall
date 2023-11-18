@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.ferry.bowall.mapper.FansMapper" >
+    <insert id="save" parameterType="com.ferry.bowall.entity.Fans">
+        INSERT INTO fans (account, fans_account)
+        VALUES (#{account}, #{fansAccount})
+    </insert>
 
-
+    <select id="isfan" resultType="com.ferry.bowall.entity.Fans">
+        SELECT * from fans where (fans.account = #{account} and fans.fans_account = #{fansAccount})
+    </select>
 </mapper>

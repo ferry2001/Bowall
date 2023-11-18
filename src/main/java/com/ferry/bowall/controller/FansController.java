@@ -33,5 +33,11 @@ public class FansController {
         }
     }
 
+    @GetMapping("/isfan")
+    public R<Fans> isfan(String account, String fansAccount) {
+        Fans fans = fansService.isfan(account, fansAccount);
+        return R.success(fans);
+    }
+
 
 }

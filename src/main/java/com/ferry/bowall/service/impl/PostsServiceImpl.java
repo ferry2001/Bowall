@@ -8,4 +8,5 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class PostsServiceImpl extends ServiceImpl<PostsMapper, Posts> implements PostsService {
+
 }

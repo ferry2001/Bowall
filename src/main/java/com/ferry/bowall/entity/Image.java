@@ -9,4 +9,5 @@ import org.springframework.beans.factory.annotation.Qualifier;
 public class Image {
     private String account;
     private String url;
+    private String postId;
 }
