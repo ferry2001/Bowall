@@ -1,9 +1,11 @@
 package com.ferry.bowall.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.ferry.bowall.common.PinYin;
 import com.ferry.bowall.common.R;
+import com.ferry.bowall.entity.Fans;
 import com.ferry.bowall.entity.User;
+import com.ferry.bowall.service.FansService;
 import com.ferry.bowall.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +14,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
 
 @RequestMapping("/user")
 @RestController
@@ -22,6 +24,34 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private FansService fansService;
+
+    @Autowired
+    private PinYin pinYin;
+
+    @GetMapping("/getUser")
+    public R<User> getUser(String account) {
+        User user = userService.getUser(account);
+        if (user!=null) {
+            return R.success(user);
+        }else {
+            return R.error("用户不存在");
+        }
+
+    }
+
+    @PostMapping("/add")
+    public R<String> add(String account, String fansAccount){
+        Fans isfan = fansService.isfan(account, fansAccount);
+        if (isfan != null) {
+            return R.success("已经关注");
+        } else {
+            userService.addFanAndFollowUser(account, fansAccount);
+            return R.success("关注成功");
+        }
+
+    }
 
     @PostMapping("/login")
     public R<User> login(@RequestBody Map map, HttpSession session){
@@ -75,8 +105,50 @@ public class UserController {
 
 
     @GetMapping("/friends")
-    public R<List<User>> friends(@RequestParam String account) {
+    public R<Map<String, List<User>>> friends(@RequestParam String account) {
         List<User> friends = userService.friends(account);
-        return R.success(friends);
+
+        Map<String, List<User>> groupedObjects = new HashMap<>();
+
+
+        // Group objects
+        for (User user : friends) {
+            String objectName = user.getName();
+            // Extract the first word and its pinyin
+            String[] parts = objectName.split(" ");
+            String firstName = parts[0];
+            String py = pinYin.getPinyin(firstName);
+
+            // Generate the grouping key
+            String groupingKey = "";
+                //if chinese
+            if (!py.isEmpty()) {
+                groupingKey = py.charAt(0)+"";
+                //if english
+            }else {
+                groupingKey = firstName.charAt(0)+"";
+            }
+            //uppercase letter
+            groupingKey = groupingKey.toUpperCase();
+            // Add the object to the corresponding group
+            if (groupedObjects.containsKey(groupingKey)) {
+                groupedObjects.get(groupingKey).add(user);
+            } else {
+                List<User> objects = new ArrayList<>();
+                objects.add(user);
+                groupedObjects.put(groupingKey, objects);
+            }
+        }
+
+        for (List<User> users : groupedObjects.values()) {
+            Collections.sort(users, new Comparator<User>() {
+                public int compare(User u1, User u2) {return -(u1.getName().compareTo(u2.getName()));
+                }});}
+
+        //Sort map
+        TreeMap<String, List<User>> treeMap = new TreeMap<>(groupedObjects);
+
+        return R.success(treeMap);
     }
+
 }

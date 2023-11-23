@@ -10,6 +10,10 @@ public interface UserService extends IService<User> {
     void updateUser(User user);
     List<User> getUserList();
 
-    public List<User> friends(String account);
+    List<User> friends(String account);
+
+    void addFanAndFollowUser(String account, String fansAccount);
+
+    User getUser(String account);
 
 }

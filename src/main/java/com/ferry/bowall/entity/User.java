@@ -1,9 +1,10 @@
 package com.ferry.bowall.entity;
 
 import lombok.Data;
-
+import javax.persistence.ManyToMany;
 import java.time.LocalDateTime;
-import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 public class User {
@@ -14,5 +15,7 @@ public class User {
     private Integer status;
     private String avatar;
     private String sign;
+    private String address;
+
     private LocalDateTime UpdateTime;
 }
