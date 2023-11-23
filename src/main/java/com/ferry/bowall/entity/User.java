@@ -15,6 +15,7 @@ public class User {
     private Integer status;
     private String avatar;
     private String sign;
+    private String address;
 
     private LocalDateTime UpdateTime;
 }

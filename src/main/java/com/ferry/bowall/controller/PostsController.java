@@ -9,6 +9,7 @@ import com.ferry.bowall.entity.Posts;
 import com.ferry.bowall.entity.User;
 import com.ferry.bowall.service.ImageService;
 import com.ferry.bowall.service.PostsService;
+import com.ferry.bowall.service.UserService;
 import javafx.geometry.Pos;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,40 @@ public class PostsController {
     private PostsService postsService;
 
     @Autowired
+    private UserService userService;
+
+    @Autowired
     private ImageService imageService;
+
+    @GetMapping("/getAllPosts")
+    public R<List<PostsDto>> getAllPosts() {
+        List<PostsDto> postsDtos = new ArrayList<>();
+        LambdaQueryWrapper<Posts> postsLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        List<Posts> posts = postsService.list(postsLambdaQueryWrapper);
+
+        for (Posts post : posts) {
+            // select images object in post
+            LambdaQueryWrapper<Image> imageLambdaQueryWrapper = new LambdaQueryWrapper<>();
+            imageLambdaQueryWrapper = imageLambdaQueryWrapper.eq(Image::getPostId, post.getId());
+            List<Image> images = imageService.list(imageLambdaQueryWrapper);
+
+            //select user object in post
+            User user = userService.getUser(post.getAccount());
+
+            PostsDto postsDto = new PostsDto();
+            postsDto.setUser(user);
+            postsDto.setAccount(post.getAccount());
+            postsDto.setId(post.getId());
+            postsDto.setText(post.getText());
+            postsDto.setUpdateDate(post.getUpdateDate());
+            postsDto.setImages(images);
+
+            System.out.println(images);
+            postsDtos.add(postsDto);
+        }
+
+        return R.success(postsDtos);
+    }
 
     @PostMapping("/post")
     public R<String> post(@RequestBody Map map) {

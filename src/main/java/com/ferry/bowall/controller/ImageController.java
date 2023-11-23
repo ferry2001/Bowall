@@ -12,8 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -46,13 +49,20 @@ public class ImageController {
         String pathName = "/usr/local/demo/images/" + uuid;
         String outputName = "/usr/local/demo/images/" + uuid + ".png";
         String url = "http://47.98.224.129:8080/images/" + uuid + ".png";
+   /*     String pathName = "D:\\Java\\bowall\\src\\main\\resources\\images\\" + uuid;
+        String outputName = "D:\\Java\\bowall\\src\\main\\resources\\images\\" + uuid + ".png";
+        String url = "http://localhost:8080/images/" + uuid + ".png";*/
         images.transferTo(new File(pathName));
         ImageConverter.converter(pathName, outputName);
+        BufferedImage bufferedImage = ImageIO.read(new File(outputName));
 
         Image image = new Image();
         image.setAccount(account);
         image.setUrl(url);
         image.setPostId(postId);
+        image.setWidth(String.valueOf(bufferedImage.getWidth()));
+        image.setHeight(String.valueOf(bufferedImage.getHeight()));
+        image.setUpdateDate(LocalDateTime.now());
         imageService.save(image);
 
         return R.success("传输成功");
