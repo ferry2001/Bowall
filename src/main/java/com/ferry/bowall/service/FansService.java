@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface FansService extends IService<Fans> {
 
-
+    Fans isfan(String account, String fansAccount);
 }
