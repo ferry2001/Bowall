@@ -42,10 +42,13 @@ public class UserController {
     }
 
     @PostMapping("/add")
-    public R<String> add(String account, String fansAccount){
+    public R<String> add(@RequestBody Map map){
+        String account = map.get("account").toString();
+        String fansAccount = map.get("fansAccount").toString();
         Fans isfan = fansService.isfan(account, fansAccount);
         if (isfan != null) {
-            return R.success("已经关注");
+            userService.deleteFanAndFollowUser(account, fansAccount);
+            return R.success("取消关注");
         } else {
             userService.addFanAndFollowUser(account, fansAccount);
             return R.success("关注成功");

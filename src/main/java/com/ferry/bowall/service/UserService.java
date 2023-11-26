@@ -14,6 +14,8 @@ public interface UserService extends IService<User> {
 
     void addFanAndFollowUser(String account, String fansAccount);
 
+    void deleteFanAndFollowUser(String account, String fansAccount);
+
     User getUser(String account);
 
 }

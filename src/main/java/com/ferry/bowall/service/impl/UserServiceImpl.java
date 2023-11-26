@@ -1,8 +1,10 @@
 package com.ferry.bowall.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ferry.bowall.entity.Fans;
+import com.ferry.bowall.entity.Followers;
 import com.ferry.bowall.entity.User;
 import com.ferry.bowall.mapper.FansMapper;
 import com.ferry.bowall.mapper.FollowersMapper;
@@ -50,6 +52,19 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
         fansMapper.save(account, fansAccount);
         followersMapper.save(fansAccount, account);
+    }
+
+    @Override
+    public void deleteFanAndFollowUser(String account, String fansAccount) {
+        LambdaQueryWrapper<Fans> fansLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        fansLambdaQueryWrapper.eq(Fans::getAccount, account);
+        fansLambdaQueryWrapper.eq(Fans::getFansAccount, fansAccount);
+        LambdaQueryWrapper<Followers> followersLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        followersLambdaQueryWrapper.eq(Followers::getAccount, fansAccount);
+        followersLambdaQueryWrapper.eq(Followers::getFollowersAccount, account);
+
+        fansMapper.delete(fansLambdaQueryWrapper);
+        followersMapper.delete(followersLambdaQueryWrapper);
     }
 
     @Override
