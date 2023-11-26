@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 public class Image {
     private String account;
     private String url;
-    private String postId;
+    private String postsId;
     private String width;
     private String height;
     private LocalDateTime updateDate;

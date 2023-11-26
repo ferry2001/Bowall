@@ -69,8 +69,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public User getUser(String account) {
-        User user = userMapper.getUser(account);
-        return user;
+        return userMapper.getUser(account);
+    }
+
+    @Override
+    public String getUserName(String account) {
+        return userMapper.getUserName(account);
     }
 
 

@@ -59,7 +59,7 @@ public class ImageController {
         Image image = new Image();
         image.setAccount(account);
         image.setUrl(url);
-        image.setPostId(postId);
+        image.setPostsId(postId);
         image.setWidth(String.valueOf(bufferedImage.getWidth()));
         image.setHeight(String.valueOf(bufferedImage.getHeight()));
         image.setUpdateDate(LocalDateTime.now());

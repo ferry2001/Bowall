@@ -3,10 +3,13 @@ package com.ferry.bowall.controller;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ferry.bowall.common.R;
+import com.ferry.bowall.dto.CommentsDto;
 import com.ferry.bowall.dto.PostsDto;
+import com.ferry.bowall.entity.Comments;
 import com.ferry.bowall.entity.Image;
 import com.ferry.bowall.entity.Posts;
 import com.ferry.bowall.entity.User;
+import com.ferry.bowall.service.CommentsService;
 import com.ferry.bowall.service.ImageService;
 import com.ferry.bowall.service.PostsService;
 import com.ferry.bowall.service.UserService;
@@ -35,20 +38,41 @@ public class PostsController {
     @Autowired
     private ImageService imageService;
 
+    @Autowired
+    private CommentsService commentsService;
+
     @GetMapping("/getAllPosts")
     public R<List<PostsDto>> getAllPosts() {
         List<PostsDto> postsDtos = new ArrayList<>();
+
         LambdaQueryWrapper<Posts> postsLambdaQueryWrapper = new LambdaQueryWrapper<>();
         List<Posts> posts = postsService.list(postsLambdaQueryWrapper);
 
         for (Posts post : posts) {
             // select images object in post
             LambdaQueryWrapper<Image> imageLambdaQueryWrapper = new LambdaQueryWrapper<>();
-            imageLambdaQueryWrapper = imageLambdaQueryWrapper.eq(Image::getPostId, post.getId());
+            imageLambdaQueryWrapper.eq(Image::getPostsId, post.getId());
             List<Image> images = imageService.list(imageLambdaQueryWrapper);
 
             //select user object in post
             User user = userService.getUser(post.getAccount());
+
+            //select commentsDto object in post
+            //1.select comments 2.new arraylist of commentsDto
+            //3.for comments which add name of commenter and comment into commentsDto
+            LambdaQueryWrapper<Comments> commentsLambdaQueryWrapper = new LambdaQueryWrapper<>();
+            commentsLambdaQueryWrapper = commentsLambdaQueryWrapper.eq(Comments::getPostsId, post.getId());
+            List<Comments> comments = commentsService.list(commentsLambdaQueryWrapper);
+            ArrayList<CommentsDto> commentsDtos = new ArrayList<>();
+            for (Comments comment : comments) {
+                CommentsDto commentsDto = new CommentsDto();
+                commentsDto.setComments(comment);
+
+                String commentUserName = userService.getUserName(comment.getAccount());
+                commentsDto.setUserName(commentUserName);
+
+                commentsDtos.add(commentsDto);
+            }
 
             PostsDto postsDto = new PostsDto();
             postsDto.setUser(user);
@@ -57,6 +81,7 @@ public class PostsController {
             postsDto.setText(post.getText());
             postsDto.setUpdateDate(post.getUpdateDate());
             postsDto.setImages(images);
+            postsDto.setComments(commentsDtos);
 
             System.out.println(images);
             postsDtos.add(postsDto);
@@ -90,7 +115,7 @@ public class PostsController {
 
         for (Posts post : posts) {
             LambdaQueryWrapper<Image> imageLambdaQueryWrapper = new LambdaQueryWrapper<>();
-            imageLambdaQueryWrapper = imageLambdaQueryWrapper.eq(Image::getPostId, post.getId());
+            imageLambdaQueryWrapper = imageLambdaQueryWrapper.eq(Image::getPostsId, post.getId());
             List<Image> images = imageService.list(imageLambdaQueryWrapper);
 
             PostsDto postsDto = new PostsDto();
@@ -121,7 +146,7 @@ public class PostsController {
 
         for (Posts post : posts) {
             LambdaQueryWrapper<Image> imageLambdaQueryWrapper = new LambdaQueryWrapper<>();
-            imageLambdaQueryWrapper = imageLambdaQueryWrapper.eq(Image::getPostId, post.getId());
+            imageLambdaQueryWrapper = imageLambdaQueryWrapper.eq(Image::getPostsId, post.getId());
             List<Image> images = imageService.list(imageLambdaQueryWrapper);
 
             PostsDto postsDto = new PostsDto();

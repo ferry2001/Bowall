@@ -1,8 +1,11 @@
 package com.ferry.bowall.entity;
 
+import lombok.Data;
+
 import java.time.LocalDateTime;
 
-public class comments {
+@Data
+public class Comments {
     private String id;
     private String postsId;
     private String account;

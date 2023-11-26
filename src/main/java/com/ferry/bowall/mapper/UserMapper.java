@@ -15,10 +15,13 @@ public interface UserMapper extends BaseMapper<User> {
 
     void updateUser(User user);
 
-    @Select("SELECT * FROM bowall.user")
+    @Select("SELECT * FROM user")
     List<User> getUserList();
 
     User getUser(String account);
+
+    @Select("SELECT name FROM user WHERE account = #{account}")
+    String getUserName(String account);
 
     List<User> friends(String account);
 
