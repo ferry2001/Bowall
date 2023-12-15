@@ -77,5 +77,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         return userMapper.getUserName(account);
     }
 
+    @Override
+    public String getUserAvatar(String account) {
+        return userMapper.getAvatar(account);
+    }
 
 }

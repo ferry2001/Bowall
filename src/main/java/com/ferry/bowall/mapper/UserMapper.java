@@ -23,6 +23,8 @@ public interface UserMapper extends BaseMapper<User> {
     @Select("SELECT name FROM user WHERE account = #{account}")
     String getUserName(String account);
 
-    List<User> friends(String account);
+    @Select("SELECT avatar FROM user WHERE account = #{account}")
+    String getAvatar(String account);
 
+    List<User> friends(String account);
 }

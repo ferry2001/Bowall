@@ -8,4 +8,5 @@ import lombok.Data;
 public class CommentsDto {
     private Comments comments;
     private String userName;
+    private String avatar;
 }
