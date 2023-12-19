@@ -33,7 +33,6 @@ public class WebMvcConfig extends WebMvcConfigurationSupport {
     @Override
     protected void addResourceHandlers(ResourceHandlerRegistry registry) {
         log.info("开始进行静态资源映射...");
-        registry.addResourceHandler("doc.html").addResourceLocations("classpath:/META-INF/resources/");
         registry.addResourceHandler("/images/**")
                 .addResourceLocations("file:/usr/local/demo/images/");
     }
@@ -72,9 +71,9 @@ public class WebMvcConfig extends WebMvcConfigurationSupport {
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("瑞吉外卖")
-                .version("1.0")
-                .description("瑞吉外卖接口文档")
+                .title("BoWall")
+                .version("1.0.0")
+                .description("BoWall interface doc")
                 .build();
     }
 }

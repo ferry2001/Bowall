@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -30,7 +29,7 @@ public class MessageController {
         messageLambdaQueryWrapper.orderByAsc(Message::getUpdateDate);
         Long count = messageService.count(messageLambdaQueryWrapper);
         //计算倒数页数
-        page = (count % size == 0) ? (count / size - page) : (count / size + 1 - page);
+        page = (count % size == 0) ? (count / size) : (count / size + 1 - page);
 
         Page<Message> messagePage = new Page<>(page, size);
         Page<Message> messageData = messageService.page(messagePage, messageLambdaQueryWrapper);

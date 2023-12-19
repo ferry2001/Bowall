@@ -1,8 +1,8 @@
 package com.ferry.bowall.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.ferry.bowall.config.WebSocketConfig;
 import com.ferry.bowall.entity.Message;
 import com.ferry.bowall.mapper.MessageMapper;
 import com.ferry.bowall.service.MessageService;
@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message> implements MessageService {
     @Autowired
     private MessageMapper messageMapper;
+
 
     @Override
     public Long count(LambdaQueryWrapper<Message> messageLambdaQueryWrapper) {
