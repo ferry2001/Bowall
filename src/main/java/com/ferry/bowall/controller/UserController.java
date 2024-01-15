@@ -3,9 +3,16 @@ package com.ferry.bowall.controller;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.ferry.bowall.common.PinYin;
 import com.ferry.bowall.common.R;
+import com.ferry.bowall.dto.MessageDto;
 import com.ferry.bowall.entity.Fans;
+import com.ferry.bowall.entity.Message;
+import com.ferry.bowall.entity.Notification;
 import com.ferry.bowall.entity.User;
+import com.ferry.bowall.enums.MessageIsRead;
+import com.ferry.bowall.enums.NotificationStatus;
 import com.ferry.bowall.service.FansService;
+import com.ferry.bowall.service.MessageService;
+import com.ferry.bowall.service.NotificationService;
 import com.ferry.bowall.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +29,13 @@ import java.util.*;
 @Slf4j
 public class UserController {
     @Autowired
+    private NotificationService notificationService;
+
+    @Autowired
     private UserService userService;
+
+    @Autowired
+    private MessageService messageService;
 
     @Autowired
     private FansService fansService;
@@ -33,16 +46,16 @@ public class UserController {
     @GetMapping("/getUser")
     public R<User> getUser(String account) {
         User user = userService.getUser(account);
-        if (user!=null) {
+        if (user != null) {
             return R.success(user);
-        }else {
+        } else {
             return R.error("用户不存在");
         }
 
     }
 
     @PostMapping("/add")
-    public R<String> add(@RequestBody Map map){
+    public R<String> add(@RequestBody Map map) {
         String account = map.get("account").toString();
         String fansAccount = map.get("fansAccount").toString();
         Fans isfan = fansService.isfan(account, fansAccount);
@@ -57,7 +70,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public R<User> login(@RequestBody Map map, HttpSession session){
+    public R<User> login(@RequestBody Map map, HttpSession session) {
         log.info(map.toString());
 
         //获取手机号
@@ -75,21 +88,21 @@ public class UserController {
         String codeInSession = "1234";
 
         //进行验证码的比对（页面提交的验证码和Session中保存的验证码比对）
-        if(codeInSession != null && codeInSession.equals(code)){
+        if (codeInSession != null && codeInSession.equals(code)) {
             //如果能够比对成功，说明登录成功
 
             LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
-            queryWrapper.eq(User::getPhone,phone);
+            queryWrapper.eq(User::getPhone, phone);
 
             User user = userService.getOne(queryWrapper);
-            if(user == null){
+            if (user == null) {
                 //判断当前手机号对应的用户是否为新用户，如果是新用户就自动完成注册
                 user = new User();
                 user.setPhone(phone);
                 user.setStatus(1);
                 userService.save(user);
             }
-            session.setAttribute("user",user.getAccount());
+            session.setAttribute("user", user.getAccount());
 
 //            //如果用户登录成功，删除 Redis 中缓存的验证码
 //            redisTemplate.delete(phone);
@@ -106,6 +119,39 @@ public class UserController {
         return R.success("用户信息修改成功");
     }
 
+    @GetMapping("/message")
+    public R<HashSet<MessageDto>> message(@RequestParam String account) {
+        LambdaQueryWrapper<Message> messageLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        messageLambdaQueryWrapper.eq(Message::getRecipientAccount, account).eq(Message::getIsRead, MessageIsRead.no).orderByDesc(Message::getUpdateDate);
+        List<Message> messages = messageService.list(messageLambdaQueryWrapper);
+
+        HashSet<MessageDto> messageDtos = new HashSet<>();
+        HashSet<User> users = new HashSet<>();
+        for (Message message : messages) {
+
+            LambdaQueryWrapper<User> userLambdaQueryWrapper = new LambdaQueryWrapper<>();
+            String senderAccount = message.getSenderAccount();
+            userLambdaQueryWrapper.eq(User::getAccount, senderAccount);
+            User one = userService.getOne(userLambdaQueryWrapper);
+
+
+            if (!users.contains(one)) {
+                users.add(one);
+                LambdaQueryWrapper<Message> messageLambdaQueryWrapper1 = new LambdaQueryWrapper<>();
+                messageLambdaQueryWrapper1.eq(Message::getSenderAccount, one.getAccount()).eq(Message::getRecipientAccount, account);
+
+                MessageDto messageDto = new MessageDto();
+                messageDto.setMessage(message);
+                messageDto.setAccount(one.getAccount());
+                messageDto.setName(one.getName());
+                messageDto.setAvatar(one.getAvatar());
+                messageDto.setCount(messageService.count(messageLambdaQueryWrapper1));
+                messageDtos.add(messageDto);
+            }
+        }
+
+        return R.success(messageDtos);
+    }
 
     @GetMapping("/friends")
     public R<Map<String, List<User>>> friends(@RequestParam String account) {
@@ -124,12 +170,12 @@ public class UserController {
 
             // Generate the grouping key
             String groupingKey = "";
-                //if chinese
+            //if chinese
             if (!py.isEmpty()) {
-                groupingKey = py.charAt(0)+"";
+                groupingKey = py.charAt(0) + "";
                 //if english
-            }else {
-                groupingKey = firstName.charAt(0)+"";
+            } else {
+                groupingKey = firstName.charAt(0) + "";
             }
             //uppercase letter
             groupingKey = groupingKey.toUpperCase();
@@ -145,8 +191,11 @@ public class UserController {
 
         for (List<User> users : groupedObjects.values()) {
             Collections.sort(users, new Comparator<User>() {
-                public int compare(User u1, User u2) {return -(u1.getName().compareTo(u2.getName()));
-                }});}
+                public int compare(User u1, User u2) {
+                    return -(u1.getName().compareTo(u2.getName()));
+                }
+            });
+        }
 
         //Sort map
         TreeMap<String, List<User>> treeMap = new TreeMap<>(groupedObjects);

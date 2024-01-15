@@ -2,6 +2,9 @@ package com.ferry.bowall.config;
 
 
 import com.baomidou.mybatisplus.annotation.DbType;
+import com.baomidou.mybatisplus.autoconfigure.MybatisPlusPropertiesCustomizer;
+import com.baomidou.mybatisplus.core.MybatisConfiguration;
+import com.baomidou.mybatisplus.core.handlers.MybatisEnumTypeHandler;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
 import org.apache.ibatis.annotations.Mapper;
@@ -32,6 +35,19 @@ public class MybatisPlusConfig{
         MybatisPlusInterceptor mybatisPlusInterceptor = new MybatisPlusInterceptor();
         mybatisPlusInterceptor.addInnerInterceptor(new PaginationInnerInterceptor(DbType.MYSQL));
         return mybatisPlusInterceptor;
+    }
+
+    /**
+     * 配置Mybatis枚举
+     * @return
+     */
+    @Bean
+    public MybatisPlusPropertiesCustomizer mybatisPlusPropertiesCustomizer() {
+        return properties -> {
+            MybatisConfiguration configuration = new MybatisConfiguration();
+            configuration.setDefaultEnumTypeHandler(MybatisEnumTypeHandler.class); // 枚举处理类
+            properties.setConfiguration(configuration);
+        };
     }
 
 }

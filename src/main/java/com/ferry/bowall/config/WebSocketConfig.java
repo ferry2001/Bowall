@@ -31,10 +31,6 @@ public class WebSocketConfig implements WebSocketConfigurer {
 }
 
 
-
-
-
-
 class MyWebSocketHandler extends TextWebSocketHandler {
     final private Map<String, WebSocketSession> sessionPool = new HashMap<>();
 
