@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
@@ -76,6 +78,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public String getUserAvatar(String account) {
         return userMapper.getAvatar(account);
+    }
+
+    @Override
+    public List<User> getUsers(Set<String> accounts) {
+        return userMapper.getUsers(accounts);
     }
 
 }

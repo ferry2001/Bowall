@@ -3,8 +3,9 @@ package com.ferry.bowall;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.ferry.bowall.entity.*;
-import com.ferry.bowall.enums.MessageIsRead;
-import com.ferry.bowall.enums.NotificationStatus;
+import com.ferry.bowall.enums.Message.MessageIsDel;
+import com.ferry.bowall.enums.Message.MessageIsRead;
+import com.ferry.bowall.enums.Notification.NotificationStatus;
 import com.ferry.bowall.mapper.FansMapper;
 import com.ferry.bowall.mapper.MessageMapper;
 import com.ferry.bowall.service.MessageService;
@@ -84,6 +85,14 @@ public class TestMapper {
         LambdaQueryWrapper<Message> messageLambdaQueryWrapper = new LambdaQueryWrapper<>();
         Message message = new Message();
         message.setIsRead(MessageIsRead.no);
+        messageMapper.update(message, messageLambdaQueryWrapper);
+    }
+
+    @Test
+    public void isDel() {
+        LambdaQueryWrapper<Message> messageLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        Message message = new Message();
+        message.setIsDel(MessageIsDel.no);
         messageMapper.update(message, messageLambdaQueryWrapper);
     }
 }

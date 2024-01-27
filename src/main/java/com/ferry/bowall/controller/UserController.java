@@ -3,13 +3,8 @@ package com.ferry.bowall.controller;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.ferry.bowall.common.PinYin;
 import com.ferry.bowall.common.R;
-import com.ferry.bowall.dto.MessageDto;
 import com.ferry.bowall.entity.Fans;
-import com.ferry.bowall.entity.Message;
-import com.ferry.bowall.entity.Notification;
 import com.ferry.bowall.entity.User;
-import com.ferry.bowall.enums.MessageIsRead;
-import com.ferry.bowall.enums.NotificationStatus;
 import com.ferry.bowall.service.FansService;
 import com.ferry.bowall.service.MessageService;
 import com.ferry.bowall.service.NotificationService;
@@ -119,39 +114,6 @@ public class UserController {
         return R.success("用户信息修改成功");
     }
 
-    @GetMapping("/message")
-    public R<HashSet<MessageDto>> message(@RequestParam String account) {
-        LambdaQueryWrapper<Message> messageLambdaQueryWrapper = new LambdaQueryWrapper<>();
-        messageLambdaQueryWrapper.eq(Message::getRecipientAccount, account).eq(Message::getIsRead, MessageIsRead.no).orderByDesc(Message::getUpdateDate);
-        List<Message> messages = messageService.list(messageLambdaQueryWrapper);
-
-        HashSet<MessageDto> messageDtos = new HashSet<>();
-        HashSet<User> users = new HashSet<>();
-        for (Message message : messages) {
-
-            LambdaQueryWrapper<User> userLambdaQueryWrapper = new LambdaQueryWrapper<>();
-            String senderAccount = message.getSenderAccount();
-            userLambdaQueryWrapper.eq(User::getAccount, senderAccount);
-            User one = userService.getOne(userLambdaQueryWrapper);
-
-
-            if (!users.contains(one)) {
-                users.add(one);
-                LambdaQueryWrapper<Message> messageLambdaQueryWrapper1 = new LambdaQueryWrapper<>();
-                messageLambdaQueryWrapper1.eq(Message::getSenderAccount, one.getAccount()).eq(Message::getRecipientAccount, account);
-
-                MessageDto messageDto = new MessageDto();
-                messageDto.setMessage(message);
-                messageDto.setAccount(one.getAccount());
-                messageDto.setName(one.getName());
-                messageDto.setAvatar(one.getAvatar());
-                messageDto.setCount(messageService.count(messageLambdaQueryWrapper1));
-                messageDtos.add(messageDto);
-            }
-        }
-
-        return R.success(messageDtos);
-    }
 
     @GetMapping("/friends")
     public R<Map<String, List<User>>> friends(@RequestParam String account) {

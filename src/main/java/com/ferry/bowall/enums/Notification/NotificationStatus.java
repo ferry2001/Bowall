@@ -1,4 +1,4 @@
-package com.ferry.bowall.enums;
+package com.ferry.bowall.enums.Notification;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
 import lombok.Getter;

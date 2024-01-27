@@ -62,7 +62,3 @@ mybatis-plus:
 #    map-underscore-to-camel-case: true
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     default-enum-type-handler: com.baomidou.mybatisplus.core.handlers.MybatisEnumTypeHandler
-
-
-reggie:
-  path: D:\Java\reggie_take_out\src\main\resources\img\

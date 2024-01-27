@@ -11,4 +11,15 @@ public class MessageDto {
     private String avatar;
 
     private Long count;
+
+    public MessageDto() {
+    }
+
+    public MessageDto(Message message, String account, String name, String avatar, Long count) {
+        this.message = message;
+        this.account = account;
+        this.name = name;
+        this.avatar = avatar;
+        this.count = count;
+    }
 }

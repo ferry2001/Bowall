@@ -1,7 +1,7 @@
 package com.ferry.bowall.entity;
 
-import com.ferry.bowall.enums.NotificationStatus;
-import com.ferry.bowall.enums.NotificationType;
+import com.ferry.bowall.enums.Notification.NotificationStatus;
+import com.ferry.bowall.enums.Notification.NotificationType;
 import lombok.Data;
 
 import java.time.LocalDateTime;

@@ -1,15 +1,14 @@
-package com.ferry.bowall.enums;
+package com.ferry.bowall.enums.Notification;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
 import lombok.Getter;
 
 @Getter
-public enum MessageIsRead {
-    no("no", "no"),
-    yes("yes", "yes");
+public enum NotificationType {
+    MESSAGE("message", "message"),
+    COMMENTS("comments", "comments");
 
-
-    MessageIsRead(String value, String desc) {
+    NotificationType(String value, String desc) {
         this.value = value;
         this.desc = desc;
     }

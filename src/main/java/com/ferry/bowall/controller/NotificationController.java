@@ -3,7 +3,7 @@ package com.ferry.bowall.controller;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.ferry.bowall.common.R;
 import com.ferry.bowall.entity.Notification;
-import com.ferry.bowall.enums.NotificationStatus;
+import com.ferry.bowall.enums.Notification.NotificationStatus;
 import com.ferry.bowall.service.NotificationService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

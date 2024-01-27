@@ -2,7 +2,6 @@ package com.ferry.bowall.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.ferry.bowall.config.WebSocketConfig;
 import com.ferry.bowall.entity.Message;
 import com.ferry.bowall.mapper.MessageMapper;
 import com.ferry.bowall.service.MessageService;
