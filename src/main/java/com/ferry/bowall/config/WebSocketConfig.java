@@ -57,6 +57,7 @@ class MyWebSocketHandler extends TextWebSocketHandler {
 
         WebSocketSession recipientSession = sessionPool.get(msg.getRecipientAccount());
         if(recipientSession != null) {
+            //here is output code
             recipientSession.sendMessage(message);
             System.out.println(recipientSession);
         }else {

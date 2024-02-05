@@ -1,7 +1,6 @@
 package com.ferry.bowall.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ferry.bowall.common.R;
 import com.ferry.bowall.dto.CommentsDto;
@@ -14,7 +13,6 @@ import com.ferry.bowall.service.CommentsService;
 import com.ferry.bowall.service.ImageService;
 import com.ferry.bowall.service.PostsService;
 import com.ferry.bowall.service.UserService;
-import javafx.geometry.Pos;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -69,8 +67,8 @@ public class PostsController {
 
             String commentUserName = userService.getUserName(comment.getAccount());
             String commentUserAvatar = userService.getUserAvatar(comment.getAccount());
-            commentsDto.setUserName(commentUserName);
-            commentsDto.setAvatar(commentUserAvatar);
+            commentsDto.setName(commentUserName);
+            commentsDto.setUserAvatar(commentUserAvatar);
 
             commentsDtos.add(commentsDto);
         }
@@ -119,8 +117,8 @@ public class PostsController {
 
                 String commentUserName = userService.getUserName(comment.getAccount());
                 String commentUserAvatar = userService.getUserAvatar(comment.getAccount());
-                commentsDto.setUserName(commentUserName);
-                commentsDto.setAvatar(commentUserAvatar);
+                commentsDto.setName(commentUserName);
+                commentsDto.setUserAvatar(commentUserAvatar);
 
                 commentsDtos.add(commentsDto);
             }

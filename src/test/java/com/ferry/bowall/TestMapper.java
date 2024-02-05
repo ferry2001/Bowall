@@ -3,10 +3,15 @@ package com.ferry.bowall;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.ferry.bowall.entity.*;
+import com.ferry.bowall.enums.Comments.CommentsIsDel;
+import com.ferry.bowall.enums.Comments.CommentsIsRead;
+import com.ferry.bowall.enums.Image.ImageIsCover;
 import com.ferry.bowall.enums.Message.MessageIsDel;
 import com.ferry.bowall.enums.Message.MessageIsRead;
 import com.ferry.bowall.enums.Notification.NotificationStatus;
+import com.ferry.bowall.mapper.CommentsMapper;
 import com.ferry.bowall.mapper.FansMapper;
+import com.ferry.bowall.mapper.ImageMapper;
 import com.ferry.bowall.mapper.MessageMapper;
 import com.ferry.bowall.service.MessageService;
 import com.ferry.bowall.service.NotificationService;
@@ -24,16 +29,13 @@ public class TestMapper {
     private MessageMapper messageMapper;
 
     @Autowired
-    private MessageService messageService;
-
-    @Autowired
-    private NotificationService notificationService;
-
-    @Autowired
-    private UserService userService;
-
-    @Autowired
     private FansMapper fansMapper;
+
+    @Autowired
+    private CommentsMapper commentsMapper;
+
+    @Autowired
+    private ImageMapper imageMapper;
 
     @Test
     public void userTest() {
@@ -57,28 +59,6 @@ public class TestMapper {
     }
 
 
-    @Test
-    public void message() {
-        String account = "fefylosfahor";
-        LambdaQueryWrapper<Notification> notificationLambdaQueryWrapper = new LambdaQueryWrapper<>();
-        notificationLambdaQueryWrapper.eq(Notification::getAccount,account).eq(Notification::getStatus, NotificationStatus.SENT);
-        List<Notification> notifications = notificationService.list(notificationLambdaQueryWrapper);
-        for (Notification notification : notifications) {
-            String messageId = notification.getMessageId();
-            LambdaQueryWrapper<Message> messageLambdaQueryWrapper = new LambdaQueryWrapper<>();
-            messageLambdaQueryWrapper.eq(Message::getId,messageId);
-            Message one = messageService.getOne(messageLambdaQueryWrapper);
-            String senderAccount = one.getSenderAccount();
-            LambdaQueryWrapper<User> userLambdaQueryWrapper = new LambdaQueryWrapper<>();
-            userLambdaQueryWrapper.eq(User::getAccount, senderAccount);
-            User user = userService.getOne(userLambdaQueryWrapper);
-
-            System.out.println(user);
-            System.out.println(one.getContent());
-
-            System.out.println("========================");
-        }
-    }
 
     @Test
     public void isRead() {
@@ -94,5 +74,29 @@ public class TestMapper {
         Message message = new Message();
         message.setIsDel(MessageIsDel.no);
         messageMapper.update(message, messageLambdaQueryWrapper);
+    }
+
+    @Test
+    public void commentsIsRead() {
+        LambdaQueryWrapper<Comments> messageLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        Comments comments = new Comments();
+        comments.setIsRead(CommentsIsRead.no);
+        commentsMapper.update(comments, messageLambdaQueryWrapper);
+    }
+
+    @Test
+    public void commentsIsDel() {
+        LambdaQueryWrapper<Comments> messageLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        Comments comments = new Comments();
+        comments.setIsDel(CommentsIsDel.no);
+        commentsMapper.update(comments, messageLambdaQueryWrapper);
+    }
+
+    @Test
+    public void imageIsCover() {
+        LambdaQueryWrapper<Image> imageLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        Image image = new Image();
+        image.setIsCover(ImageIsCover.no);
+        imageMapper.update(image, imageLambdaQueryWrapper);
     }
 }
