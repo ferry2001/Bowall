@@ -3,12 +3,10 @@ package com.ferry.bowall.controller;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.ferry.bowall.common.R;
 import com.ferry.bowall.dto.CommentsDto;
-import com.ferry.bowall.dto.MessageDto;
 import com.ferry.bowall.entity.*;
 import com.ferry.bowall.enums.Comments.CommentsIsDel;
+import com.ferry.bowall.enums.Comments.CommentsIsRead;
 import com.ferry.bowall.enums.Image.ImageIsCover;
-import com.ferry.bowall.enums.Message.MessageIsDel;
-import com.ferry.bowall.enums.Message.MessageIsRead;
 import com.ferry.bowall.service.CommentsService;
 import com.ferry.bowall.service.ImageService;
 import com.ferry.bowall.service.PostsService;
@@ -123,9 +121,26 @@ public class CommentsController {
 
             commentsDtos.add(commentsDto);
         }
-
-
         return R.success(commentsDtos);
+    }
+
+    @GetMapping("/updateIsRead")
+    public R<String> updateIsRead(@RequestParam String account) {
+        LambdaQueryWrapper<Posts> postsLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        postsLambdaQueryWrapper.eq(Posts::getAccount, account);
+        List<Posts> posts = postsService.list(postsLambdaQueryWrapper);
+        ArrayList<String> postIds = new ArrayList<>();
+        for (Posts post : posts) {
+            postIds.add(post.getId());
+        }
+
+        LambdaQueryWrapper<Comments> commentsLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        commentsLambdaQueryWrapper.in(Comments::getPostsId, postIds)
+                .eq(Comments::getIsRead, CommentsIsRead.no);
+        Comments comments = new Comments();
+        comments.setIsRead(CommentsIsRead.yes);
+        commentsService.update(comments ,commentsLambdaQueryWrapper);
+        return R.success("comments is read");
     }
 
 }
