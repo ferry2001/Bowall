@@ -123,7 +123,7 @@ public class CommentsController {
         }
         return R.success(commentsDtos);
     }
-
+    
     @GetMapping("/updateIsRead")
     public R<String> updateIsRead(@RequestParam String account) {
         LambdaQueryWrapper<Posts> postsLambdaQueryWrapper = new LambdaQueryWrapper<>();
